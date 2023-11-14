@@ -1,6 +1,6 @@
 //
-//  MyRemindersVersionApp.swift
-//  MyRemindersVersion
+//  MyAmazingReminderVersionApp.swift
+//  MyAmazingReminderVersion
 //
 //  Created by Luigi Fiorentino on 14/11/23.
 //
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct MyRemindersVersionApp: App {
+struct MyAmazingReminderVersionApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,

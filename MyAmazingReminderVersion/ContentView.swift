@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  MyRemindersVersion
+//  MyAmazingReminderVersion
 //
 //  Created by Luigi Fiorentino on 14/11/23.
 //
@@ -37,8 +37,6 @@ struct ContentView: View {
         } detail: {
             Text("Select an item")
         }
-        
-        Text("Prova")
     }
 
     private func addItem() {

@@ -1,6 +1,6 @@
 //
 //  Item.swift
-//  MyRemindersVersion
+//  MyAmazingReminderVersion
 //
 //  Created by Luigi Fiorentino on 14/11/23.
 //
