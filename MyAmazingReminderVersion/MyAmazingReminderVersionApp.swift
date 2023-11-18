@@ -34,7 +34,7 @@ struct MyAmazingReminderVersionApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ReminderView()
+            ReminderView(vm : NotificationDataModel())
         }
         .modelContainer(sharedModelContainer)
     }

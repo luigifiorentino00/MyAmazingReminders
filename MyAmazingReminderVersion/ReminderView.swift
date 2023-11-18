@@ -24,52 +24,18 @@ extension View {
     }
 }
 
-func scheduleNotification(title: String, body: String, WeekDay: Int, Hour: Int, Minute: Int, Repeat: Bool){
-    
-    let content = UNMutableNotificationContent()
-    content.title = title
-    content.body = body
-    content.sound = .default
-    content.badge = 1
-    
-    var dateComponents = DateComponents()
-   // dateComponents.day
-   // dateComponents.month
-   // dateComponents.year
-    dateComponents.weekday = WeekDay
-    dateComponents.hour = Hour
-    dateComponents.minute = Minute
-    
-    let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: Repeat)
-    
-    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-    
-    UNUserNotificationCenter.current().add(request)
-}
-
-func dayOfWeekString(for dayOfWeek: Int) -> String {
-        switch dayOfWeek {
-        case 1: return "Sunday"
-        case 2: return "Monday"
-        case 3: return "Tuesday"
-        case 4: return "Wednesday"
-        case 5: return "Thursday"
-        case 6: return "Friday"
-        case 7: return "Saturday"
-        default: return "Invalid Day"
-        }
-    }
-
 
 struct ReminderView: View {
     
     @State private var isTextFieldVisible = false
     @State private var isPresented = false
-    @State private var enteredText = ""
-    let calendar = Calendar.current
-    @State var viewModel = NotificationDataModel()
+    @State var fill = "circle"
+    @StateObject private var vm: NotificationDataModel
+    init(vm: NotificationDataModel) {
+        _vm = StateObject(wrappedValue: vm)
+        UIView.appearance().tintColor = UIColor(named: "AccentColor")
+    }
     
-    @State var Attempt : LocalNotification = LocalNotification(Identifier: "N4", Title: "", Body: "", WeekDay:0 , Hour: 8, Minute: 0, Repeat: false)
     
     var body: some View {
   
@@ -77,52 +43,81 @@ struct ReminderView: View {
             
             List{
                 
-                ForEach(viewModel.LocalNotifications) { LocalNotification in
+                ForEach(vm.LocalNotifications) { LocalNotification in
                     
                     HStack{
-                      
+                                                
+                            
+                        ZStack{
+                            
+                            Image(systemName: "circle")
+                                .font(.title2)
+                                .foregroundStyle(LocalNotification.Color)
+                            
+                            Image(systemName: LocalNotification.Done)
+                                .font(LocalNotification.Format)
+                                .foregroundStyle(LocalNotification.Color)
+                                .onTapGesture {
+                                    vm.setDone(reminderIdentifier: LocalNotification.Identifier)
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                        vm.removeReminder(reminderIdentifier: LocalNotification.Identifier)
+                                    }
+                                }
+                        }
                         
                         VStack (alignment: .leading){
                             
-                          Text(LocalNotification.Title)
-                           
+                            Text(LocalNotification.Title)
+                                
+                            if(vm.isReminderTimeOn(reminderIdentifier: LocalNotification.Identifier))
+                            {
+                                Text("\(vm.getDate(reminderIdentifier: LocalNotification.Identifier)), \(vm.getTime(reminderIdentifier: LocalNotification.Identifier))")
+                                    .foregroundStyle(.gray)
+                            }
+                            else if(vm.isReminderDateOn(reminderIdentifier: LocalNotification.Identifier)){
+                                Text("\(vm.getDate(reminderIdentifier: LocalNotification.Identifier))")
+                                    .foregroundStyle(.gray)
+                            }
+                               
+                           }
+                            .onTapGesture {
+                                vm.changeTappedStatus(reminderIdentifier: LocalNotification.Identifier)
+                            }
+                            .padding(.leading,5)
+                            
+                      
+                    
                         /*    TextField("Add a note", text: $LocalNotification.Notes, onCommit: {
-                                            // Perform actions when the user presses return
-                                            isTextFieldVisible = false
-                                        })
-                                        .padding()
-                            
-                            Text("\(enteredText)")
-                                .font(.subheadline)
-                                .foregroundStyle(.gray)
-                            */
-                            
-                           Text("\(dayOfWeekString(for: LocalNotification.WeekDay))\(",")\(LocalNotification.Hour)\(":")\(LocalNotification.Minute)")
-                                .foregroundStyle(.red)
-                           
-
-                        }
-                        .onTapGesture {
-                            isTextFieldVisible=true
-                        }
+                         // Perform actions when the user presses return
+                         isTextFieldVisible = false
+                         })
+                         .padding()
+                         
+                         Text("\(enteredText)")
+                         .font(.subheadline)
+                         .foregroundStyle(.gray)
+                         */
+                        
+                        /*              Text("\(dayOfWeekString(for: LocalNotification.WeekDay))\(",")\(LocalNotification.Hour)\(":")\(LocalNotification.Minute)")
+                         .foregroundStyle(.red)*/
                         
                         Spacer()
                         
-                        Button(action: {
-                         /*  scheduleNotification(title: LocalNotification.Title, body: LocalNotification.Body, WeekDay: LocalNotification.WeekDay, Hour: LocalNotification.Hour, Minute: LocalNotification.Minute, Repeat: LocalNotification.Repeat)*/
-                            isPresented=true;
-                                    }
-                            ) {
-                                        Image(systemName: "info.circle")
-                                            .font(.title)
-                                            .foregroundColor(.blue)
-                                    }
-                            .sheet(isPresented: $isPresented){
-                                ReminderDetailView(notificationDetail: $Attempt)
+                        if(LocalNotification.Tapped){
+                            Button(action: {
+                                isPresented=true;
                             }
-                        
-                                        }
-                   
+                            ) {
+                                Image(systemName: "info.circle")
+                                    .font(.title)
+                                    .foregroundColor(.blue)
+                            }
+                            .sheet(isPresented: $isPresented){
+                                ReminderDetailView(reminderIdentifier : LocalNotification.Identifier)
+                                    .environmentObject(vm)
+                            }
+                        }
+                    }
                 }
             }
             .listStyle(.plain)
@@ -130,10 +125,30 @@ struct ReminderView: View {
             .navigationBarTitleTextColor(Color.blue)
          
         }
+        
+        Button (action :
+                {
+            vm.saveNewReminder(newIdentifier: vm.getNewIdentifier(), newTitle: "New", newBody: "")
+            
+                })
+                {
+                HStack{
+                    
+                    Image(systemName: "plus.circle.fill")
+                        .font(.title)
+                        .foregroundColor(.blue)
+                        
+                    
+                    Text("New Reminder")
+                        .bold()
+                }.padding()
+            
+            Spacer()
+        }
     }
 }
 
 
 #Preview {
-    ReminderView()
+    ReminderView(vm : NotificationDataModel())
 }
