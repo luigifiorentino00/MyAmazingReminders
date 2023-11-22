@@ -125,6 +125,11 @@ struct ReminderDetailView: View {
                         toggleDateStatus = true
                     }
                 }
+                .onChange(of: toggleDateStatus){
+                    if(!toggleDateStatus){
+                        toggleTimeStatus = false
+                    }
+                }
                 
                 if(toggleTimeStatus){
                     
