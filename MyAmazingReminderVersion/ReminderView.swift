@@ -24,6 +24,14 @@ extension View {
     }
 }
 
+func eraseNotification(notificationId : String) {
+    
+    let center = UNUserNotificationCenter.current()
+            
+            center.removePendingNotificationRequests(withIdentifiers: [notificationId])
+            // remove delivered notifications too
+            center.removeDeliveredNotifications(withIdentifiers: [notificationId])
+}
 
 struct ReminderView: View {
     
@@ -60,6 +68,7 @@ struct ReminderView: View {
                                     .onTapGesture {
                                         vm.setDone(reminderIdentifier: LocalNotification.Identifier)
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                            eraseNotification(notificationId: LocalNotification.Identifier)
                                             vm.removeReminder(reminderIdentifier: LocalNotification.Identifier)
                                         }
                                     }

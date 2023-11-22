@@ -8,7 +8,7 @@
 import SwiftUI
 import UserNotifications
 
-func scheduleNotification(title: String, body: String, Year : Int, Month : Int, Day : Int, WeekDay: Int, Hour: Int, Minute: Int, Repeat: Bool){
+func scheduleNotification(reminderIdentifier : String, title: String, body: String, Year : Int, Month : Int, Day : Int, WeekDay: Int, Hour: Int, Minute: Int, Repeat: Bool){
     
     let content = UNMutableNotificationContent()
     content.title = title
@@ -26,7 +26,7 @@ func scheduleNotification(title: String, body: String, Year : Int, Month : Int, 
     
     let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: Repeat)
     
-    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+    let request = UNNotificationRequest(identifier: reminderIdentifier, content: content, trigger: trigger)
     
     UNUserNotificationCenter.current().add(request)
 }
@@ -175,7 +175,8 @@ struct ReminderDetailView: View {
                                   newRepeat: false)
                 
                 if(toggleDateStatus || toggleTimeStatus){
-                    scheduleNotification(title: newTitle,
+                    scheduleNotification(reminderIdentifier: reminderIdentifier,
+                                         title: newTitle,
                                          body: newBody,
                                          Year: Calendar.current.component(.year, from: selectedDate),
                                          Month: Calendar.current.component(.month, from : selectedDate),
