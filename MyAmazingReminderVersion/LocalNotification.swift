@@ -34,10 +34,10 @@ struct LocalNotification : Identifiable {
 
 class NotificationDataModel: NSObject, ObservableObject {
     
-     @Published var LocalNotifications: [LocalNotification] = [
-       LocalNotification(Identifier: "N0", Title: "Morning learner", Body: "Time to badge in"),
-       LocalNotification(Identifier: "N1", Title: "Goodbye learner", Body: "Time to badge out"),
-       LocalNotification(Identifier: "N2", Title: "What's up?", Body: "You're doing good")
+    @Published var LocalNotifications: [LocalNotification] = [
+        LocalNotification(Identifier: "N0", Title: "Morning learner", Body: "Time to badge in"),
+        LocalNotification(Identifier: "N1", Title: "Goodbye learner", Body: "Time to badge out"),
+        LocalNotification(Identifier: "N2", Title: "What's up?", Body: "You're doing good")
     ]
     
     
@@ -88,32 +88,32 @@ class NotificationDataModel: NSObject, ObservableObject {
     func UpdateReminder(reminderIdentifier: String, newTitle : String?,newBody : String?, newYear : Int?, newMonth : Int?, newDay : Int?, newWeekDay: Int?, newHour: Int?, newMinute: Int?, newRepeat: Bool?){
         for i in 0..<LocalNotifications.count {
             if(LocalNotifications[i].Identifier==reminderIdentifier){
-                           if let newTitle = newTitle {
-                               LocalNotifications[i].Title = newTitle
-                           }
-                           if let newBody = newBody {
-                               LocalNotifications[i].Body = newBody
-                           }
-                           if let newYear = newYear {
-                               LocalNotifications[i].Year = newYear                           }
-                           if let newMonth = newMonth {
-                               LocalNotifications[i].Month = newMonth
-                           }
-                           if let newDay = newDay {
-                               LocalNotifications[i].Day = newDay
-                           }
-                           if let newWeekDay = newWeekDay {
-                               LocalNotifications[i].WeekDay = newWeekDay
-                           }
-                           if let newHour = newHour {
-                               LocalNotifications[i].Hour = newHour
-                           }
-                           if let newMinute = newMinute {
-                               LocalNotifications[i].Minute = newMinute
-                           }
-                           if let newRepeat = newRepeat {
-                               LocalNotifications[i].Repeat = newRepeat
-                           }
+                if let newTitle = newTitle {
+                    LocalNotifications[i].Title = newTitle
+                }
+                if let newBody = newBody {
+                    LocalNotifications[i].Body = newBody
+                }
+                if let newYear = newYear {
+                    LocalNotifications[i].Year = newYear                           }
+                if let newMonth = newMonth {
+                    LocalNotifications[i].Month = newMonth
+                }
+                if let newDay = newDay {
+                    LocalNotifications[i].Day = newDay
+                }
+                if let newWeekDay = newWeekDay {
+                    LocalNotifications[i].WeekDay = newWeekDay
+                }
+                if let newHour = newHour {
+                    LocalNotifications[i].Hour = newHour
+                }
+                if let newMinute = newMinute {
+                    LocalNotifications[i].Minute = newMinute
+                }
+                if let newRepeat = newRepeat {
+                    LocalNotifications[i].Repeat = newRepeat
+                }
             }
         }
     }
@@ -130,13 +130,13 @@ class NotificationDataModel: NSObject, ObservableObject {
     }
     
     private func extractNumber(from string: String) -> Int? {
-            // Extracting the number from the string
-            let components = string.components(separatedBy: CharacterSet.decimalDigits.inverted)
-            if let number = components.compactMap({ Int($0) }).first {
-                return number
-            }
-            return nil
+        // Extracting the number from the string
+        let components = string.components(separatedBy: CharacterSet.decimalDigits.inverted)
+        if let number = components.compactMap({ Int($0) }).first {
+            return number
         }
+        return nil
+    }
     
     func setDone (reminderIdentifier : String){
         for i in 0..<LocalNotifications.count {
@@ -156,14 +156,14 @@ class NotificationDataModel: NSObject, ObservableObject {
                     if let actualMinute = LocalNotifications[i].Minute {
                         if(actualMinute<10){
                             temp="\(actualHour):0\(actualMinute)"
-                                            }
+                        }
                         else{
                             temp="\(actualHour):\(actualMinute)"
-                            }
-                                                                    }
-                                                            }
-                                                                    }
-                                        }
+                        }
+                    }
+                }
+            }
+        }
         return temp;
     }
     
@@ -277,4 +277,53 @@ class NotificationDataModel: NSObject, ObservableObject {
         
         return temp;
     }
+    
+    
+    func isElapsed(reminderIdentifier : String) -> AnyShapeStyle {
+        
+        var temp = AnyShapeStyle(.gray)
+        let current = Date()
+        
+        for i in 0..<LocalNotifications.count {
+            if(LocalNotifications[i].Identifier == reminderIdentifier){
+                if let year = LocalNotifications[i].Year, let month = LocalNotifications[i].Month, let day = LocalNotifications[i].Day{
+                    if(year < Calendar.current.component(.year, from: current)){temp = AnyShapeStyle(.red)}
+                    else if(year == Calendar.current.component(.year, from: current) && month < Calendar.current.component(.month, from: current)){temp = AnyShapeStyle(.red)}
+                    else if (year == Calendar.current.component(.year, from: current) && month == Calendar.current.component(.month, from: current) && day < Calendar.current.component(.day, from: current)) {temp = AnyShapeStyle(.red)}
+                }
+            }
+        }
+        return temp
+    }
+    
+    func returnDate(reminderIdentifier : String) -> Date {
+        
+        var temp : Date = Date()
+        
+        for i in 0..<LocalNotifications.count {
+            if(LocalNotifications[i].Identifier == reminderIdentifier){
+                if let year = LocalNotifications[i].Year, let month = LocalNotifications[i].Month, let day = LocalNotifications[i].Day{
+                    let dateComponent = DateComponents(year : year, month : month, day : day)
+                        temp = Calendar.current.date(from: dateComponent)!
+                }
+            }
+        }
+        return temp
+    }
+    
+    func returnTime(reminderIdentifier : String) -> Date {
+        var temp : Date = Date()
+        
+        for i in 0..<LocalNotifications.count {
+            if(LocalNotifications[i].Identifier == reminderIdentifier){
+                if let hour = LocalNotifications[i].Hour, let minute = LocalNotifications[i].Minute{
+                    let dateComponent = DateComponents(hour : hour, minute : minute)
+                        temp = Calendar.current.date(from: dateComponent)!
+                }
+            }
+        }
+        return temp
+    }
+    
 }
+

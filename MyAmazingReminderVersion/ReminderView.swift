@@ -67,39 +67,27 @@ struct ReminderView: View {
                         
                         VStack (alignment: .leading){
                             
-                            Text(LocalNotification.Title)
+                            VStack(alignment: .leading){
                                 
-                            if(vm.isReminderTimeOn(reminderIdentifier: LocalNotification.Identifier))
-                            {
-                                Text("\(vm.getDate(reminderIdentifier: LocalNotification.Identifier)), \(vm.getTime(reminderIdentifier: LocalNotification.Identifier))")
-                                    .foregroundStyle(.gray)
+                                Text(LocalNotification.Title)
+                                if(vm.isReminderTimeOn(reminderIdentifier: LocalNotification.Identifier)){
+                                    Text("\(vm.getDate(reminderIdentifier: LocalNotification.Identifier)) \(vm.getTime(reminderIdentifier: LocalNotification.Identifier))")
+                                        .font(.subheadline)
+                                        .foregroundStyle(vm.isElapsed(reminderIdentifier: LocalNotification.Identifier))
+                                }
+                                else if(vm.isReminderDateOn(reminderIdentifier: LocalNotification.Identifier)){
+                                    Text("\(vm.getDate(reminderIdentifier: LocalNotification.Identifier))")
+                                        .font(.subheadline)
+                                        .foregroundStyle(vm.isElapsed(reminderIdentifier: LocalNotification.Identifier))
+                                }
                             }
-                            else if(vm.isReminderDateOn(reminderIdentifier: LocalNotification.Identifier)){
-                                Text("\(vm.getDate(reminderIdentifier: LocalNotification.Identifier))")
-                                    .foregroundStyle(.gray)
-                            }
-                               
+                                                        
                            }
                             .onTapGesture {
                                 vm.changeTappedStatus(reminderIdentifier: LocalNotification.Identifier)
                             }
                             .padding(.leading,5)
                             
-                      
-                    
-                        /*    TextField("Add a note", text: $LocalNotification.Notes, onCommit: {
-                         // Perform actions when the user presses return
-                         isTextFieldVisible = false
-                         })
-                         .padding()
-                         
-                         Text("\(enteredText)")
-                         .font(.subheadline)
-                         .foregroundStyle(.gray)
-                         */
-                        
-                        /*              Text("\(dayOfWeekString(for: LocalNotification.WeekDay))\(",")\(LocalNotification.Hour)\(":")\(LocalNotification.Minute)")
-                         .foregroundStyle(.red)*/
                         
                         Spacer()
                         
@@ -113,7 +101,12 @@ struct ReminderView: View {
                                     .foregroundColor(.blue)
                             }
                             .sheet(isPresented: $isPresented){
-                                ReminderDetailView(reminderIdentifier : LocalNotification.Identifier)
+                                ReminderDetailView(
+                                    toggleDateStatus : vm.isReminderDateOn(reminderIdentifier: LocalNotification.Identifier),
+                                    toggleTimeStatus : vm.isReminderTimeOn(reminderIdentifier: LocalNotification.Identifier),
+                                    selectedDate : vm.returnDate(reminderIdentifier: LocalNotification.Identifier),
+                                    selectedTime : vm.returnTime(reminderIdentifier: LocalNotification.Identifier),
+                                    reminderIdentifier : LocalNotification.Identifier, newTitle : (vm.getTitle(reminderIdentifier: LocalNotification.Identifier)) , newBody : (vm.getNotes(reminderIdentifier: LocalNotification.Identifier)))
                                     .environmentObject(vm)
                             }
                         }

@@ -49,22 +49,21 @@ struct ReminderDetailView: View {
     
     @EnvironmentObject var vm : NotificationDataModel
     @Environment(\.dismiss) private var dismiss
-    @State private var toggleDateStatus : Bool = false
-    @State private var toggleTimeStatus : Bool = false
-    @State private var selectedDate : Date = Date()
-    @State private var selectedTime : Date = Date()
+    @State var toggleDateStatus : Bool
+    @State var toggleTimeStatus : Bool
+    @State var selectedDate : Date
+    @State var selectedTime : Date 
     let reminderIdentifier : String
-    @State var newTitle : String = ""
-    @State var newBody : String = ""
+    @State var newTitle : String
+    @State var newBody : String
     
     var body: some View {
-        
         
         NavigationStack {
             Form {
                 
-            TextField("\(vm.getTitle(reminderIdentifier: reminderIdentifier))", text: $newTitle)
-            TextField("\(vm.getNotes(reminderIdentifier: reminderIdentifier))", text: $newBody)
+            TextField("", text: $newTitle)
+            TextField("", text: $newBody)
             
                 
                 Toggle(isOn: $toggleDateStatus) {
@@ -72,11 +71,17 @@ struct ReminderDetailView: View {
                     HStack{
                         Image(systemName: "calendar")
                             .foregroundColor(.red)
-                        Text("Date")
+                        VStack(alignment: .leading){
+                            Text("Date")
+                            if(toggleDateStatus){
+                                Text("\(dayOfWeekString(for : Calendar.current.component(.weekday, from: selectedDate))), \(Calendar.current.component(.day, from: selectedDate))/\(Calendar.current.component(.month, from: selectedDate))/\(String(Calendar.current.component(.year, from: selectedDate)))")
+                                    .foregroundStyle(.blue)
+                            }
+                        }
                     }
                 }
                 
-                if(toggleDateStatus || toggleTimeStatus){
+                if(toggleDateStatus){
                     
                     DatePicker(
                         "",
@@ -87,14 +92,42 @@ struct ReminderDetailView: View {
                 
                 Toggle(isOn: $toggleTimeStatus) {
                     
+                    
+                    
                     HStack{
                         Image(systemName: "clock.fill")
                             .foregroundColor(.blue)
-                        Text("Time")
+                        VStack(alignment: .leading){
+                            Text("Time")
+                            if(toggleTimeStatus){
+                                if((Calendar.current.component(.hour, from: selectedTime))>9 && Calendar.current.component(.minute, from: selectedTime)>9){
+                                    Text("\(Calendar.current.component(.hour, from: selectedTime)):\(Calendar.current.component(.minute, from: selectedTime))")
+                                        .foregroundStyle(.blue)
+                                }
+                                else if ((Calendar.current.component(.hour, from: selectedTime))>9 && Calendar.current.component(.minute, from: selectedTime)<10) {
+                                    Text("\(Calendar.current.component(.hour, from: selectedTime)):0\(Calendar.current.component(.minute, from: selectedTime))")
+                                        .foregroundStyle(.blue)
+                                }
+                                else if ((Calendar.current.component(.hour, from: selectedTime))<10 && Calendar.current.component(.minute, from: selectedTime)>9){
+                                    Text("0\(Calendar.current.component(.hour, from: selectedTime)):\(Calendar.current.component(.minute, from: selectedTime))")
+                                        .foregroundStyle(.blue)
+                                }
+                                else{
+                                    Text("0\(Calendar.current.component(.hour, from: selectedTime)):0\(Calendar.current.component(.minute, from: selectedTime))")
+                                        .foregroundStyle(.blue)
+                                }
+                            }
+                        }
+                    }
+                }
+                .onChange(of: toggleTimeStatus) {
+                    if(toggleTimeStatus){
+                        toggleDateStatus = true
                     }
                 }
                 
                 if(toggleTimeStatus){
+                    
                     DatePicker(
                         "",
                         selection: $selectedTime,
@@ -109,9 +142,20 @@ struct ReminderDetailView: View {
                 Text("Cancel")
             }),trailing: Button(action: {
                 
-              /*  if(toggleDateStatus || toggleTimeStatus){
-                    vm.enableReminder(reminderIdentifier: reminderIdentifier)
-                }*/
+                if(toggleDateStatus){
+                    vm.enableDateReminder(reminderIdentifier: reminderIdentifier)
+                }
+                else{
+                    vm.disableDateReminder(reminderIdentifier: reminderIdentifier)
+                }
+                
+                if(toggleTimeStatus){
+                    vm.enableTimeReminder(reminderIdentifier: reminderIdentifier)
+                }
+                else{
+                    vm.disableTimeReminder(reminderIdentifier: reminderIdentifier)
+                }
+                
                 vm.changeTappedStatus(reminderIdentifier: reminderIdentifier)
                 
                 vm.UpdateReminder(reminderIdentifier: reminderIdentifier,
