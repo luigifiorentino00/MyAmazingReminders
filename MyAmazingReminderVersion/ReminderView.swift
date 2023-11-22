@@ -47,47 +47,53 @@ struct ReminderView: View {
                     
                     HStack{
                                                 
+                        HStack{
+                            ZStack{
+                                
+                                Image(systemName: "circle")
+                                    .font(.title2)
+                                    .foregroundStyle(LocalNotification.Color)
+                                
+                                Image(systemName: LocalNotification.Done)
+                                    .font(LocalNotification.Format)
+                                    .foregroundStyle(LocalNotification.Color)
+                                    .onTapGesture {
+                                        vm.setDone(reminderIdentifier: LocalNotification.Identifier)
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                            vm.removeReminder(reminderIdentifier: LocalNotification.Identifier)
+                                        }
+                                    }
+                            }
                             
-                        ZStack{
-                            
-                            Image(systemName: "circle")
-                                .font(.title2)
-                                .foregroundStyle(LocalNotification.Color)
-                            
-                            Image(systemName: LocalNotification.Done)
-                                .font(LocalNotification.Format)
-                                .foregroundStyle(LocalNotification.Color)
-                                .onTapGesture {
-                                    vm.setDone(reminderIdentifier: LocalNotification.Identifier)
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                        vm.removeReminder(reminderIdentifier: LocalNotification.Identifier)
+                            VStack (alignment: .leading){
+                                
+                                VStack(alignment: .leading){
+                                    
+                                    Text(LocalNotification.Title)
+                                    if(vm.isReminderTimeOn(reminderIdentifier: LocalNotification.Identifier)){
+                                        Text("\(vm.getDate(reminderIdentifier: LocalNotification.Identifier)) \(vm.getTime(reminderIdentifier: LocalNotification.Identifier))")
+                                            .font(.subheadline)
+                                            .foregroundStyle(vm.isElapsed(reminderIdentifier: LocalNotification.Identifier))
+                                    }
+                                    else if(vm.isReminderDateOn(reminderIdentifier: LocalNotification.Identifier)){
+                                        Text("\(vm.getDate(reminderIdentifier: LocalNotification.Identifier))")
+                                            .font(.subheadline)
+                                            .foregroundStyle(vm.isElapsed(reminderIdentifier: LocalNotification.Identifier))
                                     }
                                 }
-                        }
-                        
-                        VStack (alignment: .leading){
-                            
-                            VStack(alignment: .leading){
                                 
-                                Text(LocalNotification.Title)
-                                if(vm.isReminderTimeOn(reminderIdentifier: LocalNotification.Identifier)){
-                                    Text("\(vm.getDate(reminderIdentifier: LocalNotification.Identifier)) \(vm.getTime(reminderIdentifier: LocalNotification.Identifier))")
-                                        .font(.subheadline)
-                                        .foregroundStyle(vm.isElapsed(reminderIdentifier: LocalNotification.Identifier))
-                                }
-                                else if(vm.isReminderDateOn(reminderIdentifier: LocalNotification.Identifier)){
-                                    Text("\(vm.getDate(reminderIdentifier: LocalNotification.Identifier))")
-                                        .font(.subheadline)
-                                        .foregroundStyle(vm.isElapsed(reminderIdentifier: LocalNotification.Identifier))
-                                }
                             }
-                                                        
-                           }
                             .onTapGesture {
                                 vm.changeTappedStatus(reminderIdentifier: LocalNotification.Identifier)
                             }
                             .padding(.leading,5)
-                            
+                        }
+                        .accessibilityElement(children: .combine)
+                        .accessibilityHint("Incomplete. Double tap to mark as completed. Double tap with two fingers to open details.")
+                        .accessibilityAction(.magicTap, {
+                            vm.changeTappedStatus(reminderIdentifier: LocalNotification.Identifier)
+                            isPresented.toggle()
+                        })
                         
                         Spacer()
                         
@@ -110,6 +116,7 @@ struct ReminderView: View {
                                     .environmentObject(vm)
                             }
                         }
+                            
                     }
                 }
             }
