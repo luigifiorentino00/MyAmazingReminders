@@ -59,12 +59,12 @@ struct ReminderDetailView: View {
     
     var body: some View {
         
-        NavigationStack {
+        NavigationView {
             Form {
                 
-            TextField("", text: $newTitle)
-            TextField("", text: $newBody)
-            
+                TextField("", text: $newTitle)
+                TextField("", text: $newBody)
+                
                 
                 Toggle(isOn: $toggleDateStatus) {
                     
@@ -138,59 +138,65 @@ struct ReminderDetailView: View {
                         selection: $selectedTime,
                         displayedComponents: [.hourAndMinute]
                     ).datePickerStyle(.wheel)
-
+                    
                 }
                 
             }
             .navigationBarItems(leading: Button(action: {
                 vm.changeTappedStatus(reminderIdentifier: reminderIdentifier) ; dismiss()}, label: {
-                Text("Cancel")
-            }),trailing: Button(action: {
-                
-                if(toggleDateStatus){
-                    vm.enableDateReminder(reminderIdentifier: reminderIdentifier)
+                    Text("Cancel")
+                }),trailing: Button(action: {
+                    
+                    if(toggleDateStatus){
+                        vm.enableDateReminder(reminderIdentifier: reminderIdentifier)
+                    }
+                    else{
+                        vm.disableDateReminder(reminderIdentifier: reminderIdentifier)
+                    }
+                    
+                    if(toggleTimeStatus){
+                        vm.enableTimeReminder(reminderIdentifier: reminderIdentifier)
+                    }
+                    else{
+                        vm.disableTimeReminder(reminderIdentifier: reminderIdentifier)
+                    }
+                    
+                    vm.changeTappedStatus(reminderIdentifier: reminderIdentifier)
+                    
+                    vm.UpdateReminder(reminderIdentifier: reminderIdentifier,
+                                      newTitle: newTitle,
+                                      newBody: newBody,
+                                      newYear: Calendar.current.component(.year, from: selectedDate),
+                                      newMonth: Calendar.current.component(.month, from : selectedDate),
+                                      newDay:  Calendar.current.component(.day, from : selectedDate),
+                                      newWeekDay: Calendar.current.component(.weekday, from: selectedDate),
+                                      newHour: Calendar.current.component(.hour, from: selectedTime) ,
+                                      newMinute: Calendar.current.component(.minute, from :selectedTime),
+                                      newRepeat: false)
+                    
+                    if(toggleDateStatus || toggleTimeStatus){
+                        scheduleNotification(reminderIdentifier: reminderIdentifier,
+                                             title: newTitle,
+                                             body: newBody,
+                                             Year: Calendar.current.component(.year, from: selectedDate),
+                                             Month: Calendar.current.component(.month, from : selectedDate),
+                                             Day: Calendar.current.component(.day, from : selectedDate),
+                                             WeekDay: Calendar.current.component(.weekday, from: selectedDate),
+                                             Hour: Calendar.current.component(.hour, from: selectedTime),
+                                             Minute: Calendar.current.component(.minute, from :selectedTime),
+                                             Repeat: false)
+                    }
+                    dismiss()
+                    
+                }) {
+                    Text("Done")
+                })
+            .toolbar{
+                ToolbarItem(placement: .principal) {
+                    Text("Details")
+                        .font(.headline)
                 }
-                else{
-                    vm.disableDateReminder(reminderIdentifier: reminderIdentifier)
-                }
-                
-                if(toggleTimeStatus){
-                    vm.enableTimeReminder(reminderIdentifier: reminderIdentifier)
-                }
-                else{
-                    vm.disableTimeReminder(reminderIdentifier: reminderIdentifier)
-                }
-                
-                vm.changeTappedStatus(reminderIdentifier: reminderIdentifier)
-                
-                vm.UpdateReminder(reminderIdentifier: reminderIdentifier,
-                                  newTitle: newTitle,
-                                  newBody: newBody,
-                                  newYear: Calendar.current.component(.year, from: selectedDate),
-                                  newMonth: Calendar.current.component(.month, from : selectedDate),
-                                  newDay:  Calendar.current.component(.day, from : selectedDate),
-                                  newWeekDay: Calendar.current.component(.weekday, from: selectedDate),
-                                  newHour: Calendar.current.component(.hour, from: selectedTime) ,
-                                  newMinute: Calendar.current.component(.minute, from :selectedTime),
-                                  newRepeat: false)
-                
-                if(toggleDateStatus || toggleTimeStatus){
-                    scheduleNotification(reminderIdentifier: reminderIdentifier,
-                                         title: newTitle,
-                                         body: newBody,
-                                         Year: Calendar.current.component(.year, from: selectedDate),
-                                         Month: Calendar.current.component(.month, from : selectedDate),
-                                         Day: Calendar.current.component(.day, from : selectedDate),
-                                         WeekDay: Calendar.current.component(.weekday, from: selectedDate),
-                                         Hour: Calendar.current.component(.hour, from: selectedTime),
-                                         Minute: Calendar.current.component(.minute, from :selectedTime),
-                                         Repeat: false)
-                }
-                dismiss()
-                
-            }) {
-                Text("Done")
-            })
+            }
         }
     }
 }
