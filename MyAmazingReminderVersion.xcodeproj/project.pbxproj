@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		6717E2DF2B04C1E70009ACB6 /* ReminderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6717E2DE2B04C1E70009ACB6 /* ReminderView.swift */; };
 		671CE0032B0394270063CD3F /* MyAmazingReminderVersionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 671CE0022B0394270063CD3F /* MyAmazingReminderVersionApp.swift */; };
-		671CE0052B0394270063CD3F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 671CE0042B0394270063CD3F /* ContentView.swift */; };
 		671CE0072B0394270063CD3F /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 671CE0062B0394270063CD3F /* Item.swift */; };
 		671CE0092B0394280063CD3F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 671CE0082B0394280063CD3F /* Assets.xcassets */; };
 		671CE00C2B0394280063CD3F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 671CE00B2B0394280063CD3F /* Preview Assets.xcassets */; };
@@ -21,7 +20,6 @@
 		6717E2DE2B04C1E70009ACB6 /* ReminderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderView.swift; sourceTree = "<group>"; };
 		671CDFFF2B0394270063CD3F /* MyAmazingReminderVersion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyAmazingReminderVersion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		671CE0022B0394270063CD3F /* MyAmazingReminderVersionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAmazingReminderVersionApp.swift; sourceTree = "<group>"; };
-		671CE0042B0394270063CD3F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		671CE0062B0394270063CD3F /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		671CE0082B0394280063CD3F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		671CE00B2B0394280063CD3F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -63,7 +61,6 @@
 				67DBF6C42B04D3A6000B1DB0 /* LocalNotification.swift */,
 				6717E2DE2B04C1E70009ACB6 /* ReminderView.swift */,
 				671CE0022B0394270063CD3F /* MyAmazingReminderVersionApp.swift */,
-				671CE0042B0394270063CD3F /* ContentView.swift */,
 				671CE0062B0394270063CD3F /* Item.swift */,
 				671CE0082B0394280063CD3F /* Assets.xcassets */,
 				671CE00A2B0394280063CD3F /* Preview Content */,
@@ -149,7 +146,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				671CE0052B0394270063CD3F /* ContentView.swift in Sources */,
 				671CE0072B0394270063CD3F /* Item.swift in Sources */,
 				6717E2DF2B04C1E70009ACB6 /* ReminderView.swift in Sources */,
 				67BA5ECC2B053D4A0062BAF8 /* ReminderDetailView.swift in Sources */,
@@ -294,8 +290,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -323,8 +318,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
