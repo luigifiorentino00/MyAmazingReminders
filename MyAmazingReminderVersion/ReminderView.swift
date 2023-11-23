@@ -122,38 +122,37 @@ struct ReminderView: View {
                                     selectedDate : vm.returnDate(reminderIdentifier: LocalNotification.Identifier),
                                     selectedTime : vm.returnTime(reminderIdentifier: LocalNotification.Identifier),
                                     reminderIdentifier : LocalNotification.Identifier, newTitle : (vm.getTitle(reminderIdentifier: LocalNotification.Identifier)) , newBody : (vm.getNotes(reminderIdentifier: LocalNotification.Identifier)))
-                                    .environmentObject(vm)
+                                .environmentObject(vm)
+                                    
                             }
                         }
-                            
                     }
                 }
             }
             .listStyle(.plain)
             .navigationBarTitle(Text("Reminders"), displayMode: .large)
             .navigationBarTitleTextColor(Color.blue)
-         
         }
         
-        Button (action :
-                {
-            vm.saveNewReminder(newIdentifier: vm.getNewIdentifier(), newTitle: "New", newBody: "")
-            
-                })
-                {
-                HStack{
-                    
-                    Image(systemName: "plus.circle.fill")
-                        .font(.title)
-                        .foregroundColor(.blue)
-                        
-                    
-                    Text("New Reminder")
-                        .bold()
-                }.padding()
-            
+        HStack{
+            Button (action :
+                        {
+                vm.saveNewReminder(newIdentifier: vm.getNewIdentifier(), newTitle: "New", newBody: "")
+                
+            })
+            {
+                
+                
+                Image(systemName: "plus.circle.fill")
+                    .font(.title)
+                    .foregroundColor(.blue)
+                
+                
+                Text("New Reminder")
+                    .bold()
+            }
             Spacer()
-        }
+        }.padding()
     }
 }
 

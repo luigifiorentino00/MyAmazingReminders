@@ -195,6 +195,7 @@ struct ReminderDetailView: View {
                 ToolbarItem(placement: .principal) {
                     Text("Details")
                         .font(.headline)
+                        .accessibilityAddTraits(.isHeader)
                 }
             }
         }

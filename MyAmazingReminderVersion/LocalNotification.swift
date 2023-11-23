@@ -14,7 +14,6 @@ struct LocalNotification : Identifiable {
     var Identifier: String
     var Title: String
     var Body: String
-   // var DateComponents: DateComponents
     var Year : Int?
     var Month : Int?
     var Day : Int?
@@ -28,7 +27,6 @@ struct LocalNotification : Identifiable {
     var Done : String = "circle"
     var Color : AnyShapeStyle = AnyShapeStyle(.gray)
     var Format : Font = .title2
-    
 }
 
 
@@ -286,13 +284,16 @@ class NotificationDataModel: NSObject, ObservableObject {
         
         for i in 0..<LocalNotifications.count {
             if(LocalNotifications[i].Identifier == reminderIdentifier){
-                if let year = LocalNotifications[i].Year, let month = LocalNotifications[i].Month, let day = LocalNotifications[i].Day{
+                if let year = LocalNotifications[i].Year, let month = LocalNotifications[i].Month, let day = LocalNotifications[i].Day, let hour = LocalNotifications[i].Hour, let minute = LocalNotifications[i].Minute{
                     if(year < Calendar.current.component(.year, from: current)){temp = AnyShapeStyle(.red)}
                     else if(year == Calendar.current.component(.year, from: current) && month < Calendar.current.component(.month, from: current)){temp = AnyShapeStyle(.red)}
                     else if (year == Calendar.current.component(.year, from: current) && month == Calendar.current.component(.month, from: current) && day < Calendar.current.component(.day, from: current)) {temp = AnyShapeStyle(.red)}
+                    else if (year == Calendar.current.component(.year, from: current) && month == Calendar.current.component(.month, from: current) && day == Calendar.current.component(.day, from: current) && hour < Calendar.current.component(.hour, from: current)) {temp = AnyShapeStyle(.red)}
+                    else if (year == Calendar.current.component(.year, from: current) && month == Calendar.current.component(.month, from: current) && day == Calendar.current.component(.day, from: current) && hour == Calendar.current.component(.hour, from: current) && minute < Calendar.current.component(.minute, from: current)) {temp = AnyShapeStyle(.red)}
                 }
             }
         }
+        
         return temp
     }
     
